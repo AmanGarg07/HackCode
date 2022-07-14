@@ -67,37 +67,45 @@ function OrderRow({ order }) {
   var utcSec=orderDate.getTime()
   var myd = new Date(0); 
   myd.setUTCSeconds(utcSec/1000+(order.productDetails[0].warranty)*24*3600);
-  console.log(order.productDetails[0].warranty);
+  // console.log(finalitem[0].warranty);
   console.log(order);
   
 
 
   return (
     <>
-      {order?.items?.map((item, index) => (
+      {order?.items?.map((item, index) => {
+        
+        const finalitem=order.productDetails.filter(p => {
+          console.log(p._id," ",item.productId);
+          return p._id==item.productId});
+        console.log("final item " , finalitem);
+        return (
+
         <Box className={classes.itemRow}>
           <Grid container>
             <Grid item lg={2} md={2} sm={3} xs={12}>
               {/* Image */}
               <Box>
                 <img
-                  src={order.productDetails[index].url}
+                  src={finalitem[0].url}
                   className={classes.image}
-                  alt={order.productDetails[index].title.shortTitle}
+                  alt={finalitem[0].title.shortTitle}
                 />
               </Box>
             </Grid>
             <Grid item lg={3} md={3} sm={3} xs={8}>
               {/* Title */}
-              <Link to={`/product/${order.productDetails[index]._id}`}>
+              <Link to={`/product/${finalitem[0]._id}`}>
                 <Typography className={classes.itemTitle} >
-                  {makeShortText(order.productDetails[index].title.longTitle)}
+                  {makeShortText(finalitem[0].title.longTitle)}
                 </Typography>
               </Link>
             </Grid>
             <Grid item lg={2} md={2} sm={3} xs={4} className={classes.centerItems}>
               {/* Price */}
-              <span className={classes.price}>₹{item.price}</span>
+              <span className={classes.price}>₹{item.price} </span>
+              <span className={classes.price}>&nbsp;x {item.qty}</span>
             </Grid>
             <Grid item lg={2} md={2} sm={3} xs={12} className={classes.paymentDetails}>
               {/* Payment Mode */}
@@ -105,7 +113,7 @@ function OrderRow({ order }) {
                 {orderDate.toLocaleDateString()}            
               </Typography>
               <Typography className={classes.text}>
-                {myd.setUTCSeconds(utcSec/1000+(order.productDetails[index].warranty)*24*3600)}
+                {myd.setUTCSeconds(utcSec/1000+(finalitem[0].warranty)*24*3600)}
                 {/* {myd.toLocaleDateString()}   */}
               </Typography>
               <Typography className={classes.text}>
@@ -129,7 +137,7 @@ function OrderRow({ order }) {
             </Grid>
           </Grid>
         </Box>
-      ))}
+      )})}
     </>
   );
 }
